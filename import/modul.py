@@ -1,4 +1,7 @@
 def reduce_mem_usage(df, verbose=True):
+    import numpy as np
+    import pandas as pd
+
     numerics = ["int16", "int32", "int64", "float16", "float32", "float64"]
     start_mem = df.memory_usage().sum() / 1024**2
     for col in df.columns:
@@ -47,7 +50,10 @@ def envPath(dict_path=None):
 
     dict_path_default = {
         "Windows": {"root_path": "../", "data_path": "data"},
-        "Google_Colab": {"root_path": "../gdrive/Shareddrives/Agricultural Products Price Prediction/", "data_path": "data"},
+        "Google_Colab": {
+            "root_path": "../gdrive/Shareddrives/Agricultural Products Price Prediction/",
+            "data_path": "data",
+        },
         "Kaggle_notebook": {"root_path": "..", "data_path": "input"},
     }
     # 추후에 dict_path에 Kaggle_notebook이 없으면 추가하는 코드 추가 요망
@@ -56,7 +62,6 @@ def envPath(dict_path=None):
             dict_path_default[k] = v
 
     dict_path = dict_path_default
-
 
     env = platform.uname().system
 
@@ -87,3 +92,67 @@ def envPath(dict_path=None):
     print("▣ platform.uname()", "\n", platform.uname(), sep="")
     print()
     print("▣ data_path", "\n", data_path, sep="")
+
+
+class EDA:
+    import numpy as np
+    import pandas as pd
+
+    def print_title(body, br=2, bp="┌▣ ", hr=" ---- ---- ---- ----"):
+
+        """
+        body : 내용
+        bp : bullet point, 글머리 기호
+        hr : Horizontal Rule, 수평선
+        """
+
+        class ff:
+            PURPLE = "\033[95m"
+            CYAN = "\033[96m"
+            DARKCYAN = "\033[36m"
+            BLUE = "\033[94m"
+            GREEN = "\033[92m"
+            YELLOW = "\033[93m"
+            RED = "\033[91m"
+            BOLD = "\033[1m"
+            UNDERLINE = "\033[4m"
+            END = "\033[0m"
+
+        print("\n" * br + ff.BOLD + bp + ff.UNDERLINE + body + ff.END + hr)
+
+    def Check(df) -> pd.DataFrame:
+
+        EDA.print_title("""df.shape""")
+        print(df.shape)
+
+        EDA.print_title("""df.info()""")
+        print(df.info())
+
+        EDA.print_title("""df.head()""")
+        display(df.head())
+
+    def uv(df) -> None:
+
+        EDA.print_title("""df.describe().T""")
+        display(df.describe().T)
+
+        EDA.print_title("""df.describe(include=['O'])""")
+        display(df.describe(include=["O"]))
+
+        df_temp = df.isna()
+        EDA.print_title("""df.isna().sum()""")
+        display(df_temp.to_frame())
+
+        EDA.print_title("""sns.heatmap(data=df.isna(), annot=True, fmt=".2f")""")
+        display(sns.heatmap(data=df_temp, annot=True, fmt=".2f"))
+
+        EDA.print_title("df.isna().mean()")
+        display(df_temp.mean().to_frame())
+
+    def mv(df):
+
+        df_corr = df.corr()
+        EDA.print_title("""df.corr()""")
+        display(df_corr)
+        EDA.print_title("""sns.heatmap(data=df.corr(), annot=True, fmt=".2f")""")
+        display(sns.heatmap(data=df_corr, annot=True, fmt=".2f"))
