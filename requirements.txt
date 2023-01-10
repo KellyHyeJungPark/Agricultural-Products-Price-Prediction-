@@ -1,15 +1,15 @@
-import-ipynb
-
 numpy
 pandas
 
 matplotlib
 koreanize_matplotlib
 seaborn
-plotly
 
 requests
 BeautifulSoup
 xmltodict
 openpyxl
 lxml
+
+streamlit
+plotly
